@@ -34,6 +34,11 @@ jobs:
       with:
         name: python-package-distributions
         path: dist/
+  release:    
+    needs: build
+    name: Build distribution
+    runs-on: ubuntu-latest
+    steps:
     - name: Create a Release in a GitHub Action
       uses: comnoco/create-release-action@v2.0.5
       if: ${{ github.ref == 'refs/heads/integration/**' }} && matrix.python-version == 3.9
