@@ -41,11 +41,12 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
-        tag_name: 'integration/v'${{ github.ref }}
+        tag_name: integration/v${{ github.ref }}
         release_name: Release ${{ github.ref }}
         body: |
           Changes in this Release
-          - First Change
-          - Second Change
+          - Added the CphdVectorTFR class (Create a tool to visualize a CPHD 
+          vector's time-frequency representation)
+          - Added release automation
         draft: false
         prerelease: false
