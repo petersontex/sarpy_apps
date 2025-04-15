@@ -36,7 +36,7 @@ jobs:
         path: dist/
   release:    
     needs: build
-    name: Build distribution
+    name: Create release
     runs-on: ubuntu-latest
     steps:
     - name: Create a Release in a GitHub Action
