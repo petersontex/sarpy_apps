@@ -56,7 +56,7 @@ jobs:
         path: dist/
     - name: Upload
       uses: softprops/action-gh-release@v2
-      if: github.ref_type == 'tag'
+      if: ${{ github.ref == 'refs/heads/integration/**' }} && matrix.python-version == 3.9
       with:
         tag_name: integration/v${{ github.ref }}
         release_name: Release ${{ github.ref }}
