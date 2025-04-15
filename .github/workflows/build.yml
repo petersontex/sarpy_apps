@@ -7,13 +7,33 @@ on:
         - 'integration/**'
 
 jobs:
+  release:    
+    name: Create release
+    runs-on: ubuntu-latest
+    steps:
+    - name: Create a Release in a GitHub Action
+      uses: comnoco/create-release-action@v2.0.5
+      if: ${{ github.ref == 'refs/heads/integration/**' }} && matrix.python-version == 3.9
+      id: create_release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      with:
+        tag_name: integration/v${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: |
+          Changes in this Release
+          - Added the CphdVectorTFR class (Create a tool to visualize a CPHD 
+          vector's time-frequency representation)
+          - Added release automation
+        draft: false
+        prerelease: false
   build:
     name: Build distribution
+    needs: release
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: [3.9, 3.10, 3.11, 3.12, 3.13, 3.14]
-
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python
@@ -34,24 +54,12 @@ jobs:
       with:
         name: python-package-distributions
         path: dist/
-  release:    
-    needs: build
-    name: Create release
-    runs-on: ubuntu-latest
-    steps:
-    - name: Create a Release in a GitHub Action
-      uses: comnoco/create-release-action@v2.0.5
-      if: ${{ github.ref == 'refs/heads/integration/**' }} && matrix.python-version == 3.9
-      id: create_release
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+    - name: Upload
+      uses: softprops/action-gh-release@v2
+      if: github.ref_type == 'tag'
       with:
         tag_name: integration/v${{ github.ref }}
         release_name: Release ${{ github.ref }}
-        body: |
-          Changes in this Release
-          - Added the CphdVectorTFR class (Create a tool to visualize a CPHD 
-          vector's time-frequency representation)
-          - Added release automation
         draft: false
         prerelease: false
+        files: dist/*
