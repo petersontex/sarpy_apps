@@ -41,7 +41,7 @@ jobs:
     - uses: actions/checkout@v4
     - name: Extract version number from __about__.py
       shell: bash
-      run: echo "raw_version=`sed -n 's/__version__ = \"\(.*\)/\1/p' < sarpy_apps/__about__.py`" >> $GITHUB_OUTPUT
+      run: echo "raw_version=`sed -n 's/__version__ = \"\(.*\)\"/\1/p' < sarpy_apps/__about__.py`" >> $GITHUB_OUTPUT
       id: extract_version
     - name: Set version number for stable release
       shell: bash
