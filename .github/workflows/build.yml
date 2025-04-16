@@ -46,7 +46,7 @@ jobs:
     - name: Set version number for stable release
       shell: bash
       if: endsWith(github.ref, '*master')
-      run: echo "version=${${{ steps.extract_version.outputs.raw_version }}::-1}"  >> $GITHUB_OUTPUT
+      run: echo "version=${{ steps.extract_version.outputs.raw_version }}"  >> $GITHUB_OUTPUT
       id: extract_stable_version
     - name: Create a stable release
       uses: comnoco/create-release-action@v2.0.5
@@ -69,8 +69,8 @@ jobs:
       if: contains(github.ref, 'refs/heads/integration/')
       run: |
         echo ${{ steps.extract_version.outputs.raw_version }}
-        rc_version=rc-${${{ steps.extract_version.outputs.raw_version }}::-1}
-        sed -i -e "s/__version__ = \"${${{ steps.extract_version.outputs.raw_version }}::-1}/__version__ = \"$rc_version/g" sarpy_apps/__about__.py
+        rc_version=rc-${{ steps.extract_version.outputs.raw_version }}
+        sed -i -e "s/__version__ = \"${{ steps.extract_version.outputs.raw_version }}/__version__ = \"$rc_version/g" sarpy_apps/__about__.py
         echo "version=$rc_version"  >> $GITHUB_OUTPUT
       id: extract_release_candidate_version
     - name: Create a Release candidate release
