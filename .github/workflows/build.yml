@@ -65,7 +65,6 @@ jobs:
 
   publish-to-test-pypi:
     name: Publish to Test-PyPI
-    if: ${{ github.ref == 'refs/heads/integration/**' }}
     needs: build
     runs-on: ubuntu-latest
     environment:
