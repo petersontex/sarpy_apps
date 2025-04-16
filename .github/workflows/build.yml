@@ -78,7 +78,6 @@ jobs:
         path: dist
     - name: Upload package
       uses: softprops/action-gh-release@v2
-      if: endsWith(github.ref, '*master')
       with:
         tag_name: ${{ steps.extract_version.outputs.version }}
         draft: false
