@@ -19,6 +19,19 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: "3.x"
+    - name: Extract version number from __about__.py
+      shell: bash
+      run: echo "raw_version=`sed -n 's/__version__ = \"\(.*\)\"/\1/p' < sarpy_apps/__about__.py`" >> $GITHUB_OUTPUT
+      id: extract_version
+    - name: Set version number for release candidate
+      shell: bash
+      if: contains(github.ref, 'refs/heads/integration/')
+      run: |
+        echo ${{ steps.extract_version.outputs.raw_version }}
+        rc_version=rc-${{ steps.extract_version.outputs.raw_version }}
+        sed -i -e "s/__version__ = \"${{ steps.extract_version.outputs.raw_version }}/__version__ = \"$rc_version/g" sarpy_apps/__about__.py
+        echo "version=$rc_version"  >> $GITHUB_OUTPUT
+      id: extract_release_candidate_version
     - name: Install pypa/build
       run: >-
         python3 -m
@@ -43,20 +56,14 @@ jobs:
       shell: bash
       run: echo "raw_version=`sed -n 's/__version__ = \"\(.*\)\"/\1/p' < sarpy_apps/__about__.py`" >> $GITHUB_OUTPUT
       id: extract_version
-    - name: Set version number for stable release
-      shell: bash
-      if: endsWith(github.ref, '*master')
-      run: echo "version=${{ steps.extract_version.outputs.raw_version }}"  >> $GITHUB_OUTPUT
-      id: extract_stable_version
     - name: Create a stable release
       uses: comnoco/create-release-action@v2.0.5
-      if: endsWith(github.ref, '*master')
-      id: create_stable_release
+      id: create_release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
-        tag_name: ${{ steps.extract_stable_version.outputs.version }} 
-        release_name: Version ${{ steps.extract_stable_version.outputs.version }}
+        tag_name: ${{ steps.extract_version.outputs.version }} 
+        release_name: Version ${{ steps.extract_version.outputs.version }}
         body: |
           Changes in this Release
           - Added the CphdVectorTFR class (Create a tool to visualize a CPHD 
@@ -64,49 +71,16 @@ jobs:
           - Added release automation
         draft: false
         prerelease: false
-    - name: Set version number for release candidate
-      shell: bash
-      if: contains(github.ref, 'refs/heads/integration/')
-      run: |
-        echo ${{ steps.extract_version.outputs.raw_version }}
-        rc_version=rc-${{ steps.extract_version.outputs.raw_version }}
-        sed -i -e "s/__version__ = \"${{ steps.extract_version.outputs.raw_version }}/__version__ = \"$rc_version/g" sarpy_apps/__about__.py
-        echo "version=$rc_version"  >> $GITHUB_OUTPUT
-      id: extract_release_candidate_version
-    - name: Create a Release candidate release
-      uses: comnoco/create-release-action@v2.0.5
-      if: contains(github.ref, 'refs/heads/integration/')
-      id: create_release_candidate
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-      with:
-        tag_name: ${{ steps.extract_release_candidate_version.outputs.version }}
-        release_name: Version ${{ steps.extract_release_candidate_version.outputs.version }}
-        body: |
-          Changes in this Release
-          - Added the CphdVectorTFR class (Create a tool to visualize a CPHD 
-          vector's time-frequency representation)
-          - Added release automation
-        draft: false
-        prerelease: true
     - name: Download all the dists
       uses: actions/download-artifact@v4
       with:
         name: python-package-distributions
         path: dist
-    - name: Upload stable version
+    - name: Upload package
       uses: softprops/action-gh-release@v2
       if: endsWith(github.ref, '*master')
       with:
-        tag_name: ${{ steps.extract_stable_version.outputs.version }}
-        draft: false
-        prerelease: false
-        files: dist/*
-    - name: Upload release candidate
-      uses: softprops/action-gh-release@v2
-      if: contains(github.ref, 'refs/heads/integration/')
-      with:
-        tag_name: ${{ steps.extract_release_candidate_version.outputs.version }}
+        tag_name: ${{ steps.extract_version.outputs.version }}
         draft: false
         prerelease: false
         files: dist/*
@@ -127,4 +101,4 @@ jobs:
     - name: Publish distribution to Test-PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
-        repository-url: https://test.pypi.org/
+        repository-url: https://test.pypi.org/legacy/
