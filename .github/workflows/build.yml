@@ -11,6 +11,22 @@ jobs:
     name: Create release
     runs-on: ubuntu-latest
     steps:
+    - name: Extract version number from __about__.py
+      shell: bash
+      run: version=`sed -n 's/^__version__ = "\(.*\)/\1/p' < sarpy_apps/__about__.py`
+      id: extract_release_candidate_branch
+    - name: Set version number for stable release
+      shell: bash
+      if: ${{ github.ref == 'master' }}
+      run: echo "version=${version::-1}" >> $GITHUB_OUTPUT
+      id: extract_stable_version
+    - name: Set version number for release candidate
+      shell: bash
+      if: ${{ github.ref == 'master' }}
+      run: |
+        echo "version=rc-${version::-1}" >> $GITHUB_OUTPUT
+        sed -i -e 's/^__version__ = "${{ version }}/^__version__ = "rc-${{ version }}/g' sarpy_apps/__about__.py
+      id: extract_release_candidate_version
     - name: Create a Release in a GitHub Action
       uses: comnoco/create-release-action@v2.0.5
       if: ${{ github.ref == 'refs/heads/integration/**' }} && matrix.python-version == 3.9
@@ -19,7 +35,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
         tag_name: integration/v${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        release_name: Version ${{ github.ref }}
         body: |
           Changes in this Release
           - Added the CphdVectorTFR class (Create a tool to visualize a CPHD 
@@ -80,5 +96,4 @@ jobs:
     - name: Publish distribution to Test-PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
-        name: python-package-distributions
         repository-url: https://test.pypi.org/legacy/
