@@ -13,29 +13,22 @@ jobs:
     steps:
     - name: Extract version number from __about__.py
       shell: bash
-      run: version=`sed -n 's/^__version__ = "\(.*\)/\1/p' < sarpy_apps/__about__.py`
-      id: extract_release_candidate_branch
+      run: raw_version=`sed -n 's/^__version__ = "\(.*\)/\1/p' < sarpy_apps/__about__.py` >> $GITHUB_OUTPUT
+      id: extract_version
     - name: Set version number for stable release
       shell: bash
       if: ${{ github.ref == 'master' }}
-      run: echo "version=${version::-1}" >> $GITHUB_OUTPUT
+      run: echo "version=${${{ steps.extract_version.outputs.raw_version }}::-1}"  >> $GITHUB_OUTPUT
       id: extract_stable_version
-    - name: Set version number for release candidate
-      shell: bash
-      if: ${{ github.ref == 'master' }}
-      run: |
-        echo "version=rc-${version::-1}" >> $GITHUB_OUTPUT
-        sed -i -e 's/^__version__ = "${{ version }}/^__version__ = "rc-${{ version }}/g' sarpy_apps/__about__.py
-      id: extract_release_candidate_version
-    - name: Create a Release in a GitHub Action
+    - name: Create a stable release
       uses: comnoco/create-release-action@v2.0.5
-      if: ${{ github.ref == 'refs/heads/integration/**' }} && matrix.python-version == 3.9
-      id: create_release
+      if: ${{ github.ref == 'master' }} && matrix.python-version == 3.9
+      id: create_stable_release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
-        tag_name: integration/v${{ github.ref }}
-        release_name: Version ${{ github.ref }}
+        tag_name: ${{ steps.extract_stable_version.outputs.version }} 
+        release_name: Version ${{ steps.extract_stable_version.outputs.version }}
         body: |
           Changes in this Release
           - Added the CphdVectorTFR class (Create a tool to visualize a CPHD 
@@ -43,6 +36,30 @@ jobs:
           - Added release automation
         draft: false
         prerelease: false
+    - name: Set version number for release candidate
+      shell: bash
+      if: ${{ github.ref == 'refs/heads/integration/**' }}
+      run: |
+        rc_version=rc-${${{ steps.extract_version.outputs.raw_version }}::-1}
+        sed -i -e "s/__version__ = \"${${{ steps.extract_version.outputs.raw_version }}::-1}/__version__ = \"$rc_version/g" sarpy_apps/__about__.py
+        echo "version=$rc_version"  >> $GITHUB_OUTPUT
+      id: extract_release_candidate_version
+    - name: Create a Release candidate release
+      uses: comnoco/create-release-action@v2.0.5
+      if: ${{ github.ref == 'refs/heads/integration/**' }} && matrix.python-version == 3.9
+      id: create_release_candidate
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      with:
+        tag_name: ${{ steps.extract_release_candidate_version.outputs.version }}
+        release_name: Version ${{ steps.extract_release_candidate_version.outputs.version }}
+        body: |
+          Changes in this Release
+          - Added the CphdVectorTFR class (Create a tool to visualize a CPHD 
+          vector's time-frequency representation)
+          - Added release automation
+        draft: false
+        prerelease: true
   build:
     name: Build distribution
     needs: release
