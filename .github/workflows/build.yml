@@ -69,15 +69,14 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: development
-      url: https://test.pypi.org/p/sarpy-apps
+    permissions:
+      id-token: write
     steps:
     - name: Download all the dists
       uses: actions/download-artifact@v4
+    - name: Publish distribution to Test-PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
       with:
         name: python-package-distributions
         path: dist/
         repository_url: https://test.pypi.org/legacy/
-        user: __token__
-        password: ${{ secrets.PYPI_ACCESS_TOKEN}}
-    - name: Publish distribution to Test-PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
