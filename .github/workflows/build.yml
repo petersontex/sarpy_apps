@@ -80,6 +80,6 @@ jobs:
       with:
         name: python-package-distributions
         path: dist/
-        repository_url: https://test.pypi.org/
+        repository_url: https://test.pypi.org/legacy/
     - name: Publish distribution to Test-PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
