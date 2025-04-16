@@ -67,11 +67,10 @@ jobs:
   publish-to-test-pypi:
     name: Publish to Test-PyPI
     if: ${{ github.ref == 'refs/heads/integration/**' }}
-    needs:
-    - build
+    needs: build
     runs-on: ubuntu-latest
     environment:
-      name: pypi
+      name: Development
       url: https://test.pypi.org/p/sarpy-apps
 
     permissions:
@@ -83,5 +82,5 @@ jobs:
       with:
         name: python-package-distributions
         path: dist/
-    - name: Publish distribution to PyPI
+    - name: Publish distribution to Test-PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
