@@ -63,3 +63,25 @@ jobs:
         draft: false
         prerelease: false
         files: dist/*
+
+  publish-to-test-pypi:
+    name: Publish to Test-PyPI
+    if: startsWith(github.ref, 'refs/integration/v')
+    needs:
+    - build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://test.pypi.org/p/sarpy-apps
+
+    permissions:
+      id-token: write  # IMPORTANT: mandatory for trusted publishing
+
+    steps:
+    - name: Download all the dists
+      uses: actions/download-artifact@v4
+      with:
+        name: python-package-distributions
+        path: dist/
+    - name: Publish distribution to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
