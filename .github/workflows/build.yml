@@ -23,7 +23,7 @@ jobs:
       id: extract_stable_version
     - name: Create a stable release
       uses: comnoco/create-release-action@v2.0.5
-      if: ${{ github.ref == 'master' }} && matrix.python-version == 3.9
+      if: ${{ github.ref == 'master' }}
       id: create_stable_release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
@@ -47,7 +47,7 @@ jobs:
       id: extract_release_candidate_version
     - name: Create a Release candidate release
       uses: comnoco/create-release-action@v2.0.5
-      if: ${{ github.ref == 'refs/heads/integration/**' }} && matrix.python-version == 3.9
+      if: ${{ github.ref == 'refs/heads/integration/**' }}
       id: create_release_candidate
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
