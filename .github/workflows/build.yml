@@ -68,7 +68,7 @@ jobs:
           Changes in this Release
           - Added the CphdVectorTFR class (Create a tool to visualize a CPHD 
           vector's time-frequency representation)
-          - Added release automation
+          - Added release automation 
         draft: false
         prerelease: false
     - name: Download all the dists
