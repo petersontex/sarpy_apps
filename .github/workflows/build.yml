@@ -7,63 +7,8 @@ on:
         - 'integration/**'
 
 jobs:
-  release:    
-    name: Create release
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Extract version number from __about__.py
-      shell: bash
-      run: raw_version=`sed -n 's/^__version__ = "\(.*\)/\1/p' < sarpy_apps/__about__.py` >> $GITHUB_OUTPUT
-      id: extract_version
-    - name: Set version number for stable release
-      shell: bash
-      if: ${{ github.ref == 'master' }}
-      run: echo "version=${${{ steps.extract_version.outputs.raw_version }}::-1}"  >> $GITHUB_OUTPUT
-      id: extract_stable_version
-    - name: Create a stable release
-      uses: comnoco/create-release-action@v2.0.5
-      if: ${{ github.ref == 'master' }}
-      id: create_stable_release
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-      with:
-        tag_name: ${{ steps.extract_stable_version.outputs.version }} 
-        release_name: Version ${{ steps.extract_stable_version.outputs.version }}
-        body: |
-          Changes in this Release
-          - Added the CphdVectorTFR class (Create a tool to visualize a CPHD 
-          vector's time-frequency representation)
-          - Added release automation
-        draft: false
-        prerelease: false
-    - name: Set version number for release candidate
-      shell: bash
-      if: ${{ github.ref == 'refs/heads/integration/**' }}
-      run: |
-        rc_version=rc-${${{ steps.extract_version.outputs.raw_version }}::-1}
-        sed -i -e "s/__version__ = \"${${{ steps.extract_version.outputs.raw_version }}::-1}/__version__ = \"$rc_version/g" sarpy_apps/__about__.py
-        echo "version=$rc_version"  >> $GITHUB_OUTPUT
-      id: extract_release_candidate_version
-    - name: Create a Release candidate release
-      uses: comnoco/create-release-action@v2.0.5
-      if: ${{ github.ref == 'refs/heads/integration/**' }}
-      id: create_release_candidate
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-      with:
-        tag_name: ${{ steps.extract_release_candidate_version.outputs.version }}
-        release_name: Version ${{ steps.extract_release_candidate_version.outputs.version }}
-        body: |
-          Changes in this Release
-          - Added the CphdVectorTFR class (Create a tool to visualize a CPHD 
-          vector's time-frequency representation)
-          - Added release automation
-        draft: false
-        prerelease: true
   build:
     name: Build distribution
-    needs: release
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -88,15 +33,82 @@ jobs:
       with:
         name: python-package-distributions
         path: dist/
-    - name: Upload
-      uses: softprops/action-gh-release@v2
-      if: matrix.python-version == 3.9
+  release:    
+    name: Create release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Extract version number from __about__.py
+      shell: bash
+      run: raw_version=`sed -n 's/^__version__ = "\(.*\)/\1/p' < sarpy_apps/__about__.py` >> $GITHUB_OUTPUT
+      id: extract_version
+    - name: Set version number for stable release
+      shell: bash
+      if: endsWith(github.ref, '*master')
+      run: echo "version=${${{ steps.extract_version.outputs.raw_version }}::-1}"  >> $GITHUB_OUTPUT
+      id: extract_stable_version
+    - name: Create a stable release
+      uses: comnoco/create-release-action@v2.0.5
+      if: endsWith(github.ref, '*master')
+      id: create_stable_release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
-        tag_name: integration/v${{ github.ref }}
+        tag_name: ${{ steps.extract_stable_version.outputs.version }} 
+        release_name: Version ${{ steps.extract_stable_version.outputs.version }}
+        body: |
+          Changes in this Release
+          - Added the CphdVectorTFR class (Create a tool to visualize a CPHD 
+          vector's time-frequency representation)
+          - Added release automation
+        draft: false
+        prerelease: false
+    - name: Set version number for release candidate
+      shell: bash
+      if: contains(github.ref, 'refs/heads/integration/')
+      run: |
+        rc_version=rc-${${{ steps.extract_version.outputs.raw_version }}::-1}
+        sed -i -e "s/__version__ = \"${${{ steps.extract_version.outputs.raw_version }}::-1}/__version__ = \"$rc_version/g" sarpy_apps/__about__.py
+        echo "version=$rc_version"  >> $GITHUB_OUTPUT
+      id: extract_release_candidate_version
+    - name: Create a Release candidate release
+      uses: comnoco/create-release-action@v2.0.5
+      if: contains(github.ref, 'refs/heads/integration/')
+      id: create_release_candidate
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      with:
+        tag_name: ${{ steps.extract_release_candidate_version.outputs.version }}
+        release_name: Version ${{ steps.extract_release_candidate_version.outputs.version }}
+        body: |
+          Changes in this Release
+          - Added the CphdVectorTFR class (Create a tool to visualize a CPHD 
+          vector's time-frequency representation)
+          - Added release automation
+        draft: false
+        prerelease: true
+    - name: Download all the dists
+      uses: actions/download-artifact@v4
+      with:
+        name: python-package-distributions
+        path: dist
+    - name: Upload stable version
+      uses: softprops/action-gh-release@v2
+      if: endsWith(github.ref, '*master')
+      with:
+        tag_name: ${{ steps.extract_stable_version.outputs.version }}
         draft: false
         prerelease: false
         files: dist/*
-
+    - name: Upload release candidate
+      uses: softprops/action-gh-release@v2
+      if: contains(github.ref, 'refs/heads/integration/')
+      with:
+        tag_name: ${{ steps.extract_release_candidate_version.outputs.version }}
+        draft: false
+        prerelease: false
+        files: dist/*
   publish-to-test-pypi:
     name: Publish to Test-PyPI
     needs: build
