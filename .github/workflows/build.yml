@@ -31,7 +31,7 @@ jobs:
       if: contains(github.ref, 'refs/heads/integration/')
       run: |
         echo ${{ steps.extract_version.outputs.raw_version }}
-        rc_version=${{ steps.extract_version.outputs.raw_version }}rc5
+        rc_version=${{ steps.extract_version.outputs.raw_version }}rc6
         sed -i -e "s/__version__ = \"${{ steps.extract_version.outputs.raw_version }}/__version__ = \"$rc_version/g" sarpy_apps/__about__.py
         echo "version=$rc_version"  >> $GITHUB_OUTPUT
       id: extract_release_candidate_version
