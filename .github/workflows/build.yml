@@ -58,20 +58,20 @@ jobs:
     - name: Extract version number from __about__.py
       shell: bash
       run: |
-        if [ "${{endswith(github.ref, 'master')}}" ] 
+        if "${{endswith(github.ref, 'master')}}"
         then
           echo "version=${{ needs.build.outputs.version }}" >> $GITHUB_OUTPUT
         else
           echo "version=${{ needs.build.outputs.rc_version }}" >> $GITHUB_OUTPUT
         fi
       id: extract_version
-    - name: Create a stable release
+    - name: Create a release
       uses: comnoco/create-release-action@v2.0.5
       id: create_release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
-        tag_name: ${{ steps.extract_version.outputs.version }} 
+        tag_name: v${{ steps.extract_version.outputs.version }} 
         release_name: Version ${{ steps.extract_version.outputs.version }}
         body: |
           Changes in this Release
