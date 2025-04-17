@@ -11,7 +11,8 @@ jobs:
     name: Build distribution
     runs-on: ubuntu-latest
     outputs:
-      version: ${{ steps.extract_release_candidate_version.outputs.version }}
+      version: ${{ steps.extract_version.outputs.raw_version }}
+      rc_version: ${{ steps.extract_release_candidate_version.outputs.version }}
     strategy:
       matrix:
         python-version: [3.9, 3.10, 3.11, 3.12, 3.13, 3.14]
@@ -30,7 +31,7 @@ jobs:
       if: contains(github.ref, 'refs/heads/integration/')
       run: |
         echo ${{ steps.extract_version.outputs.raw_version }}
-        rc_version=${{ steps.extract_version.outputs.raw_version }}rc2
+        rc_version=${{ steps.extract_version.outputs.raw_version }}rc3
         sed -i -e "s/__version__ = \"${{ steps.extract_version.outputs.raw_version }}/__version__ = \"$rc_version/g" sarpy_apps/__about__.py
         echo "version=$rc_version"  >> $GITHUB_OUTPUT
       id: extract_release_candidate_version
@@ -58,9 +59,9 @@ jobs:
       shell: bash
       run: |
         if [[${{endswith(github.ref, 'master')}}]]; then
-          echo "version=`sed -n 's/__version__ = \"\(.*\)/\1/p' < sarpy_apps/__about__.py`" >> $GITHUB_OUTPUT
-        else
           echo "version=${{ needs.build.outputs.version }}" >> $GITHUB_OUTPUT
+        else
+          echo "version=${{ needs.build.outputs.rc_version }}" >> $GITHUB_OUTPUT
         fi
       id: extract_version
     - name: Create a stable release
