@@ -73,7 +73,7 @@ jobs:
       id: extract_version
     - name: Generate Release Notes
       id: notes
-      uses: RedCrafter07/release-notes-action@v1
+      uses: RedCrafter07/release-notes-action@v1.0.1
       with:
         tag-name: v${{ steps.extract_version.outputs.version }}
         token: ${{ secrets.GITHUB_TOKEN }}
