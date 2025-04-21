@@ -81,6 +81,8 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         tag_name: v${{ steps.extract_version.outputs.version }}
+        generate_release_notes: true
+        name: Version ${{ steps.extract_version.outputs.version }}
         draft: false
         prerelease: false
         files: dist/*
