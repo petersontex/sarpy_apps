@@ -63,7 +63,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
       with:
         ref: ${{github.ref}}
     - name: Extract version number from __about__.py
@@ -90,6 +91,7 @@ jobs:
         name: Version ${{ steps.extract_version.outputs.version }}
         draft: false
         prerelease: false
+        target_commitish: ${{github.ref}}
         files: dist/*
         body: |
           Implements fix for MetaIcon.
