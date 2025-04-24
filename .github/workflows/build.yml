@@ -70,7 +70,7 @@ jobs:
         overwrite: true
     - name: Build RCS binary wheel and a source tarball
       run: |
-        cd ../radar_cross_section/
+        cd sarpy_apps/apps/radar_cross_section/
         python3 -m build
     - name: Upload all the MITM dists
       if: matrix.python-version == 3.9
