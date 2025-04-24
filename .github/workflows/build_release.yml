@@ -22,7 +22,8 @@ jobs:
         python-version: [3.9, 3.10, 3.11, 3.12, 3.13, 3.14]
     steps:
     # Pull the current branch to build the package from.
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
       with:
         ref: ${{github.ref}}
     - name: Set up Python
