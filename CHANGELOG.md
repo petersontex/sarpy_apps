@@ -1,5 +1,10 @@
 # Change Log
 
+## [1.2.0] - 2025-05-25
+### Added
+- More-Imagery-Than-Memory (MITM): Large image viewer from NASIC.
+- Radar_Cross_Section (RCS): Capability from NASIC.
+
 ## [1.1.25] - 2025-05-25
 ### Fixed
 - MetaIcon error
