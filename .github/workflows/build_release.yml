@@ -74,7 +74,6 @@ jobs:
           echo "version=${{ needs.build.outputs.version }}" >> $GITHUB_OUTPUT
         else
           echo "version=${{ needs.build.outputs.rc_version }}" >> $GITHUB_OUTPUT
-          sed -i -e "s/__version__ = \"${{ needs.build.outputs.version }}/__version__ = \"${{ needs.build.outputs.rc_version }}/g" sarpy_apps/__about__.py
         fi
       id: extract_version
     - name: Download all the dists
