@@ -48,13 +48,35 @@ jobs:
         pip install
         build
         --user
-    - name: Build a binary wheel and a source tarball
+    - name: Build sarpy_apps binary wheel and a source tarball
       run: python3 -m build
-    - name: Upload all the dists
+    - name: Upload all the sarpy_apps dists
       if: matrix.python-version == 3.9
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ steps.extract_version.outputs.raw_version }}
+        name: sarpy_apps_${{ steps.extract_version.outputs.raw_version }}
+        path: dist/
+        overwrite: true
+    - name: Build MITM binary wheel and a source tarball
+      run: |
+        cd sarpy_apps/apps/more-image-than-memory/
+        python3 -m build
+    - name: Upload all the MITM dists
+      if: matrix.python-version == 3.9
+      uses: actions/upload-artifact@v4
+      with:
+        name: MITM_${{ steps.extract_version.outputs.raw_version }}
+        path: dist/
+        overwrite: true
+    - name: Build RCS binary wheel and a source tarball
+      run: |
+        cd ../radar_cross_section/
+        python3 -m build
+    - name: Upload all the MITM dists
+      if: matrix.python-version == 3.9
+      uses: actions/upload-artifact@v4
+      with:
+        name: RCS_${{ steps.extract_version.outputs.raw_version }}
         path: dist/
         overwrite: true
   # This job creates a GitHub release and uploads the package contents created
@@ -78,10 +100,20 @@ jobs:
           echo "version=${{ needs.build.outputs.rc_version }}" >> $GITHUB_OUTPUT
         fi
       id: extract_version
-    - name: Download all the dists
+    - name: Download all the sarpy_apps dists
       uses: actions/download-artifact@v4
       with:
         name: ${{ needs.build.outputs.version }}
+        path: dist
+    - name: Download all the MITM dists
+      uses: actions/download-artifact@v4
+      with:
+        name: MITM_${{ needs.build.outputs.version }}
+        path: dist
+    - name: Download all the RCS dists
+      uses: actions/download-artifact@v4
+      with:
+        name: RCS_${{ needs.build.outputs.version }}
         path: dist
     - name: Create a release
       id: create_release
@@ -95,7 +127,7 @@ jobs:
         target_commitish: ${{github.ref}}
         files: dist/*
         body: |
-          Implements fix for MetaIcon.
+          Add MITM and RCS packages.
 #  publish-to-pypi:
 #    name: Publish to PyPI
 #    needs: release
