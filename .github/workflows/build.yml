@@ -93,14 +93,14 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         path: ${{ needs.build.outputs.version }}
-    - name: prep_artifacts
-      shell: bash
-      run: |
-        cd ${{ needs.build.outputs.version }}/${{ needs.build.outputs.version }}
-        ls -lah
-        unzip ${{ needs.build.outputs.version }}.zip
-        cp sarpy_apps/apps/more-image-than-memory/dist/* dist/
-        cp sarpy_apps/apps/radar_cross_section/src/dist/* dist/
+    #- name: prep_artifacts
+    #  shell: bash
+    #  run: |
+    #    cd ${{ needs.build.outputs.version }}/${{ needs.build.outputs.version }}
+    #    ls -lah
+        # unzip ${{ needs.build.outputs.version }}.zip
+    #    cp sarpy_apps/apps/more-image-than-memory/dist/* dist/
+    #    cp sarpy_apps/apps/radar_cross_section/src/dist/* dist/
     - name: Create a release
       id: create_release
       uses: softprops/action-gh-release@v2
@@ -111,7 +111,10 @@ jobs:
         draft: false
         prerelease: false
         target_commitish: ${{github.ref}}
-        files: dist/*
+        files: |
+          ${{ needs.build.outputs.version }}/${{ needs.build.outputs.version }}/dist/*
+          ${{ needs.build.outputs.version }}/${{ needs.build.outputs.version }}/sarpy_apps/apps/more-image-than-memory/dist/*
+          ${{ needs.build.outputs.version }}/${{ needs.build.outputs.version }}/sarpy_apps/apps/radar_cross_section/src/dist/*
         body: |
           Add MITM and RCS packages.
 #  publish-to-pypi:
