@@ -96,7 +96,7 @@ jobs:
     - name: prep_artifacts
       shell: bash
       run: |
-        cd ${{ needs.build.outputs.version }}
+        cd ${{ needs.build.outputs.version }}/${{ needs.build.outputs.version }}
         ls -lah
         unzip ${{ needs.build.outputs.version }}.zip
         cp sarpy_apps/apps/more-image-than-memory/dist/* dist/
