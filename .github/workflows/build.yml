@@ -64,9 +64,9 @@ jobs:
       with:
         name: ${{ steps.extract_version.outputs.raw_version }}
         path: |
-          dist/
-          sarpy_apps/apps/more-image-than-memory/dist/
-          sarpy_apps/apps/radar_cross_section/src/dist/
+          dist/*.gz
+          sarpy_apps/apps/more-image-than-memory/dist/*.gz
+          sarpy_apps/apps/radar_cross_section/src/dist/*.gz
         overwrite: true
   # This job creates a GitHub release and uploads the package contents created
   # in the build job to the release.
