@@ -57,8 +57,8 @@ shiboken6>=6.7.1
 shutilwhich==1.1.0
 six==1.16.0
 snowballstemmer==2.2.0
-Sphinx==8.2.3
-sphinx-autodoc-typehints==3.1.0
+Sphinx>=8.1.3 # changed from 8.2.3
+sphinx-autodoc-typehints==3.0.1 #changed from 3.1.0
 sphinx-rtd-theme==3.0.2
 sphinxcontrib-applehelp==2.0.0
 sphinxcontrib-devhelp==2.0.0

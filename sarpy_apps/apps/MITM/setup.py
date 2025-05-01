@@ -1,7 +1,7 @@
 from distutils.core import setup
 
-setup(name='python-mitm',
-      version='1.0',
+setup(name='mitmpy',
+      version='1.0.0',
       description='Python More Image Than Memory',
       author='N-ASK Incorporated',
       author_email='',
