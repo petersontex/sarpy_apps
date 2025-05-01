@@ -23,14 +23,24 @@ git clone <link to rcs-tool repo>
 ## Installation
 
 ### Python
-1. Navigate to the main rcs-tool directory
-2. ```console
+1. Navigate to the main MITM directory
+
+2. Install PyMITM
+```console
    pip install -r requirements.txt
+   pip install python-mitm
    ```
-3. ```console
+3. Navigate to the main rcs-tool directory
+
+4. Install RCS requirements
+```console
    pip install src/.
    ```
-4. Install PyMITM
+
+5. Run RCS
+```console
+   python -m RCSApplication
+```
 
 ### Standalone Application
 
