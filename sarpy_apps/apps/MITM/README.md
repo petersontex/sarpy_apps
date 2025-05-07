@@ -20,7 +20,7 @@ MITM allows technical users to efficiently work with SAR data that often exceeds
 
 ## Installation
 
-### From Git Repository
+### From GitLab
 
 1. Clone the repository:
    ```
@@ -100,9 +100,8 @@ The application uses PySide (Qt for Python) for its graphical interface and PyQt
 
 ## Contributing
 
-For contributions to MITM please follow the overall contribution guidence for SARPY_APPS.
-
-## Contact
-
-MITM was developed by NASIC. For issues, questions, or contributions, please submit issues in the 
-SARPY_APPS repo and NGA will coordinate with NASIC when necessary.
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/your-feature`)
+3. Commit your changes (`git commit -am 'Add your feature'`)
+4. Push to the branch (`git push origin feature/your-feature`)
+5. Create a new Pull Request
