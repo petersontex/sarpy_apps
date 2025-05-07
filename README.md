@@ -1,23 +1,107 @@
-SarPy_Apps
-==========
-This provides a set of GUI tools based on tkinter for visualizing and interacting 
-with SAR imagery and related data.
+# More Image Than Memory (MITM) Viewer
 
-Origins
--------
-This was developed to enable simple prototyping of graphical user interfaces useful 
-in conjunction with SarPy project, and was based on and motivated by the set of MATLAB 
-tools developed by NGA/NRL referred to as TASER. This effort was developed at the 
-National Geospatial-Intelligence Agency (NGA). The software use, modification, and 
-distribution rights are stipulated within the MIT license.
+## Overview
 
-Dependencies
-------------
-The core library functionality depends on the [sarpy](https://github.com/ngageoint/sarpy) 
-and [tk_builder](https://github.com/ngageoint/tk_builder) projects. 
+MITM (More Image Than Memory) is a specialized software tool designed for displaying and performing simple processing operations on complex Synthetic Aperture Radar (SAR) data using the NGA Sensor Independent Complex Data (SICD) format.
 
-Integration Branches
---------------------
-Integration branches (branches prefixed with `integration/`) are used to stage content under
-consideration for inclusion in the `master` branch and future releases.
-These branches can be used to access features and bug fixes that have not been fully released.
+MITM allows technical users to efficiently work with SAR data that often exceeds available system memory through intelligent decimation strategies and memory management techniques.
+
+## Key Features
+
+- View and analyze SICD-formatted SAR data with an intuitive interface
+- Efficient handling of datasets larger than available system memory
+- Multiple visualization modes with customizable resampling and remapping options
+- Multi-window support for comparing multiple SAR images
+
+## System Requirements
+
+- MITM functionality has been tested for Python 3.11
+- Dependencies listed in requirements.txt
+
+## Installation
+
+### From GitLab
+
+1. Clone the repository:
+   ```
+   git clone <repository-url>
+   ```
+
+2. (Optional) Create a Python virtual environment:
+   ```
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
+3. Install required packages:
+   ```
+   pip install -r requirements.txt
+   ```
+
+4. Run MITM:
+   ```
+   python main.py
+   ```
+
+### As a Standalone Application
+
+MITM can be packaged as a standalone executable using PyInstaller:
+
+1. Install python-mitm if not already installed:
+   ```
+   pip install python-mitm
+   ```
+
+2. Navigate to the PyInstaller directory:
+   ```
+   cd standalone/pyinstaller
+   ```
+
+3. Create the executable:
+   ```
+   pyinstaller mitm.spec
+   ```
+
+4. Run the executable:
+   ```
+   ./dist/mitm.exe
+   ```
+
+## Project Structure
+
+```
+MITM/
+├── main.py                    # Application entry point
+├── requirements.txt           # Python dependencies
+├── README.md                  # This file
+├── PyMITM/
+    ├── mitm_model.py          # Model components for MVC architecture
+    ├── mitm_viewer.py         # View components for MVC architecture
+    ├── mitm_controller.py     # Controller components for MVC architecture
+    ├── mitm_subapplication.py # Abstract class for MITM environment subapplications
+    ├── ui_*.py                # Compiled .ui files
+    ├── utils/                 # Helper files
+    ├── resources/             # Documentation
+    ├── mitm_ui/               # Uncompiled .ui files
+└── standalone/
+    └── pyinstaller/
+        └── mitm.spec          # Packaging scripts for distribution
+```
+
+## Architecture
+
+MITM follows the Model-View-Controller (MVC) architectural pattern:
+
+- **Model**: Manages data loading and application state
+- **View**: Handles UI rendering and user interaction
+- **Controller**: Coordinates between Model and View components
+
+The application uses PySide (Qt for Python) for its graphical interface and PyQtGraph for specialized scientific image display, providing a responsive UI even with large datasets.
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/your-feature`)
+3. Commit your changes (`git commit -am 'Add your feature'`)
+4. Push to the branch (`git push origin feature/your-feature`)
+5. Create a new Pull Request
