@@ -14,25 +14,18 @@ def get_menu_items(app):
             pass # Ignore separators or other non-command entries
     return items
 
-@pytest.fixture
-def test_app():
-    root = tk.Tk()
-    app = ImageViewer(root, None)
-    return app
-
 class TestImageViewerClass:
-    def test_initial_title(self):
+    def test_default_title(self):
         root = tk.Tk()
         app = ImageViewer(root, None)
         assert app.winfo_toplevel().title() == "Image Viewer"
 
-    def test_default_title(self):
-        assert test_app.app.winfo_toplevel().title() == "Image Viewer"
-    
     def test_multiple_filenames_title(self):
-        test_app.variables.image_reader.base_reader.file_name = ["First file name", "Second file name"]
-        test_app.set_title()
-        assert test_app.winfo_toplevel().title() == "First file name, Second file name"
+        root = tk.Tk()
+        app = ImageViewer(root, None)
+        app.variables.image_reader.base_reader.file_name = ["First file name", "Second file name"]
+        app.set_title()
+        assert app.winfo_toplevel().title() == "First file name, Second file name"
     
     # def test_menu(self):
     #     root = tk.Tk()
