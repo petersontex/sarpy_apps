@@ -12,38 +12,10 @@ here = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(here, 'README.md'), 'r') as f:
     long_description = f.read()
 
-
+path_to_sarpyapps = 'users/529965/Documents/NGA/RDC/Radar/Code/GitHub/petersontex/sarpyapps'
 # Get the relevant setup parameters from the package
 parameters = {}
-with open(os.path.join(here, 'sarpy_apps', '__about__.py'), 'r') as f:
-    exec(f.read(), parameters)
 
-
-setup(name=parameters['__title__'],
-      version=parameters['__version__'],
-      description=parameters['__summary__'],
-      long_description=long_description,
-      long_description_content_type='text/markdown',
-      packages=find_packages(exclude=('*tests*', '*examples*')),
-      url=parameters['__url__'],
-      author=parameters['__author__'],
-      author_email=parameters['__email__'],  # The primary POC
-      install_requires=[
-          'numpy', 'matplotlib', 'Pillow', 'plotly', 'sarpy>=1.3.46', 'tk_builder>=1.1.12'],
-      zip_safe=True,
-      test_suite="tests",
-      tests_require=[],
-      classifiers=[
-          'Development Status :: 4 - Beta',
-          'Intended Audience :: Developers',
-          'License :: OSI Approved :: MIT License',
-          'Programming Language :: Python :: 3.9',
-          'Programming Language :: Python :: 3.10',
-          'Programming Language :: Python :: 3.11',
-          'Programming Language :: Python :: 3.12',
-          'Programming Language :: Python :: 3.13',
-          'Programming Language :: Python :: 3.14'
-      ],
-      platforms=['any'],
-      license='MIT'
+setup(install_requires=[
+          f"sarpyapps @ file://localhost/{path_to_sarpyapps}#egg=sarpyapps"]
       )
