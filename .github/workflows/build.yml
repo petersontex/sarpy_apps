@@ -48,7 +48,7 @@ jobs:
         pip install
         build
         --user
-    - name: Build a binary wheel and a source tarball
+    - name: Build sarpy_apps binary wheel and a source tarball
       run: python3 -m build
     - name: Upload all the dists
       if: matrix.python-version == 3.9
@@ -94,8 +94,6 @@ jobs:
         prerelease: false
         target_commitish: ${{github.ref}}
         files: dist/*
-        body: |
-          Implements fix for MetaIcon.
 #  publish-to-pypi:
 #    name: Publish to PyPI
 #    needs: release
