@@ -16,6 +16,8 @@ path_to_sarpyapps = 'users/529965/Documents/NGA/RDC/Radar/Code/GitHub/petersonte
 # Get the relevant setup parameters from the package
 parameters = {}
 
-setup(install_requires=[
+setup(name='sarpy_apps',
+      version='1.1.25',
+      install_requires=[
           f"sarpyapps @ file://localhost/{path_to_sarpyapps}#egg=sarpyapps"]
       )
