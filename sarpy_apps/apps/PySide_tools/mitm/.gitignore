@@ -1,0 +1,23 @@
+# compilation artifacts
+standalone/*/*build/
+standalone/*/*dist/
+standalone/hybrid/pyd/
+standalone/hybrid/pyinstaller/dist/
+standalone/hybrid/pyinstaller/build/
+*.exe
+*.pyd
+
+
+# module build artifacts
+build/
+python_mitm.egg-info/
+
+# pyc files
+__pycache__/
+PyMITM/__pycache__/
+PyMITM/mitm_ui/__pycache__/
+PyMITM/utils/__pycache__/
+
+# other
+mitm.cfg
+*.nitf
