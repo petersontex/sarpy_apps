@@ -9,10 +9,13 @@ import os
 # Get the long description from the README file
 here = os.path.abspath(os.path.dirname(__file__))
 # Get the long description from the README file
-with open(os.path.join(here, 'README.md'), 'r') as f:
-    long_description = f.read()
+with open(os.path.join(here, 'README.md'), 'r') as readme_file:
+    long_description = readme_file.read()
 
-
+def read_requirements():
+    with open('requirements.txt') as requirements_file:
+        return requirements_file.read().splitlines()
+        
 # Get the relevant setup parameters from the package
 parameters = {}
 with open(os.path.join(here, 'sarpy_apps', '__about__.py'), 'r') as f:
@@ -28,8 +31,7 @@ setup(name=parameters['__title__'],
       url=parameters['__url__'],
       author=parameters['__author__'],
       author_email=parameters['__email__'],  # The primary POC
-      install_requires=[
-          'numpy', 'matplotlib', 'Pillow', 'plotly', 'sarpy>=1.3.46', 'tk_builder>=1.1.12'],
+      install_requires=read_requirements(),
       zip_safe=True,
       test_suite="tests",
       tests_require=[],
