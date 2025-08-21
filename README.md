@@ -18,7 +18,7 @@ and [tk_builder](https://github.com/ngageoint/tk_builder) projects.
 
 Installation
 ------------
-** Clone Repo **
+**Clone Repo**
 ```
 git clone <repo location>
 cd sarpy_apps
