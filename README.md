@@ -16,6 +16,16 @@ Dependencies
 The core library functionality depends on the [sarpy](https://github.com/ngageoint/sarpy) 
 and [tk_builder](https://github.com/ngageoint/tk_builder) projects. 
 
+Installation
+------------
+** Clone Repo **
+```
+git clone <repo location>
+cd sarpy_apps
+git checkout <desired branch>
+pip install ./
+```
+
 Integration Branches
 --------------------
 Integration branches (branches prefixed with `integration/`) are used to stage content under
