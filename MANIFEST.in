@@ -1,2 +1,2 @@
-
+recursive-include sarpy_apps/apps/PySide_tools/ *
 # nothing to be done

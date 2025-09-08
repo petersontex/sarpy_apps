@@ -18,13 +18,11 @@ def main(reader=None):
 
     tool_list = []
 
-    if is_package_installed("PyAperture"):
-        from sarpy_apps.apps.PySide_tools.apertureTool.src.PyAperture.controller.aperture_controller import ApertureController
-        tool_list.append(ApertureController(1))
+    from sarpy_apps.apps.PySide_tools.apertureTool.src.PyAperture.controller.aperture_controller import ApertureController
+    tool_list.append(ApertureController(1))
 
-    if is_package_installed("PyRCS"):
-        from sarpy_apps.apps.PySide_tools.rcs.src.PyRCS.rcs_controller import Controller as RCSController
-        tool_list.append(RCSController(1))
+    from sarpy_apps.apps.PySide_tools.rcs.src.PyRCS.rcs_controller import Controller as RCSController
+    tool_list.append(RCSController(1))
 
     controller = WrapperController(tool_list)
     window = controller.viewer
@@ -39,13 +37,11 @@ if __name__ == "__main__":
 
     tool_list = []
 
-    if is_package_installed("PyAperture"):
-        from sarpy_apps.apps.PySide_tools.apertureTool.src.PyAperture.controller.aperture_controller import ApertureController
-        tool_list.append(ApertureController(1))
+    from sarpy_apps.apps.PySide_tools.apertureTool.src.PyAperture.controller.aperture_controller import ApertureController
+    tool_list.append(ApertureController(1))
 
-    if is_package_installed("PyRCS"):
-        from sarpy_apps.apps.PySide_tools.rcs.src.PyRCS.rcs_controller import Controller as RCSController
-        tool_list.append(RCSController(1))
+    from sarpy_apps.apps.PySide_tools.rcs.src.PyRCS.rcs_controller import Controller as RCSController
+    tool_list.append(RCSController(1))
 
     controller = WrapperController(tool_list)
     window = controller.viewer
